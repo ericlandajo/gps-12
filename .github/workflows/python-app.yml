@@ -1,0 +1,40 @@
+name: Python CI Workflow
+
+on:
+  push:
+    branches:
+      - main  # Activar en push a la rama 'main'
+  pull_request:
+    branches:
+      - main  # Activar en pull request hacia la rama 'main'
+
+jobs:
+  build:
+    runs-on: ubuntu-latest  # Usar Ubuntu para el entorno
+
+    steps:
+    # 1. Checkout del código
+    - name: Checkout code
+      uses: actions/checkout@v2
+
+    # 2. Instalar pylint (en caso de no estar en requirements.txt)
+    - name: Install pylint
+      run: |
+        pip install pylint  # Instalar pylint
+
+   # 3. Run pylint
+    - name: Run pylint
+      run: |
+        pylint main.py transform.py
+
+     # 4. Instalar pytest y pytest-cov
+    - name: Install pytest and pytest-cov
+      run: |
+        pip install pytest pytest-cov  # Instalar pytest y pytest-cov para pruebas y cobertura
+
+    # 5. Ejecutar los tests y medir la cobertura
+    - name: Run tests and coverage
+      run: |
+        pytest test.py --maxfail=1 --disable-warnings --cov=transform --cov-report=term 
+
+    
